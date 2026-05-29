@@ -1,0 +1,196 @@
+openapi: "3.0.3"
+info:
+  title: Blog Comments REST API
+  description: |
+    Full CRUD API for blog post comments.
+    Added to the JmilkFan blog-web-application as part of IT6 Final Drill.
+  version: "1.0.0"
+
+servers:
+  - url: http://127.0.0.1:8080
+    description: Local API server
+
+tags:
+  - name: Comments
+    description: Operations on post comments
+
+paths:
+
+  /api/v1/posts/{post_id}/comments:
+
+    get:
+      tags: [Comments]
+      summary: List all comments for a post
+      parameters:
+        - $ref: '#/components/parameters/PostId'
+      responses:
+        "200":
+          description: Array of comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      tags: [Comments]
+      summary: Create a new comment on a post
+      parameters:
+        - $ref: '#/components/parameters/PostId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentInput'
+      responses:
+        "201":
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/posts/{post_id}/comments/{comment_id}:
+
+    get:
+      tags: [Comments]
+      summary: Retrieve a single comment
+      parameters:
+        - $ref: '#/components/parameters/PostId'
+        - $ref: '#/components/parameters/CommentId'
+      responses:
+        "200":
+          description: The requested comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Comments]
+      summary: Update a comment (partial update supported)
+      parameters:
+        - $ref: '#/components/parameters/PostId'
+        - $ref: '#/components/parameters/CommentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentUpdate'
+      responses:
+        "200":
+          description: Updated comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Comments]
+      summary: Delete a comment
+      parameters:
+        - $ref: '#/components/parameters/PostId'
+        - $ref: '#/components/parameters/CommentId'
+      responses:
+        "204":
+          description: Comment deleted — no content returned
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+components:
+
+  parameters:
+    PostId:
+      name: post_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: UUID of the blog post
+    CommentId:
+      name: comment_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: UUID of the comment
+
+  schemas:
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "3f2a1b4c-..."
+        name:
+          type: string
+          example: "Alice"
+        text:
+          type: string
+          example: "Great post!"
+        post_id:
+          type: string
+          example: "7c1b9e2d-..."
+        date:
+          type: string
+          format: date-time
+          example: "2025-01-15T10:30:00"
+
+    CommentInput:
+      type: object
+      required: [name, text]
+      properties:
+        name:
+          type: string
+          example: "Alice"
+        text:
+          type: string
+          example: "This was very helpful."
+
+    CommentUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Alice (edited)"
+        text:
+          type: string
+          example: "Updated comment body."
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Post 'xyz' not found."
+    BadRequest:
+      description: Missing or invalid field
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: object
+                example:
+                  name: "Author name is required"
