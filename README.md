@@ -1,6 +1,6 @@
 # Comments REST API — IT6 Final Drill
 
-> **Student addition** to [Cycy-newb/blog-web-application](https://github.com/Cycy-newb/blog-web-application)
+> **Student addition** to [Cyzenzz/blog-web-application](https://github.com/Cyzenzz/blog-web-application)
 > (originally by [JmilkFan](https://github.com/JmilkFan/blog-web-application), first commit 2016)
 
 ---
