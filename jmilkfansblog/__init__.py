@@ -14,6 +14,7 @@ from jmilkfansblog.controllers import blog
 from jmilkfansblog.controllers import account
 from jmilkfansblog.controllers.flask_restful.posts import PostApi
 from jmilkfansblog.controllers.flask_restful.auth import AuthApi
+from jmilkfansblog.controllers.flask_restful.comments_api import comments_blueprint
 from jmilkfansblog.extensions import bcrypt, openid, login_manager
 from jmilkfansblog.extensions import principals, flask_celery
 from jmilkfansblog.extensions import restful_api, debug_toolbar
@@ -136,5 +137,6 @@ def create_app(object_name):
     # Register the Blueprint into app object
     app.register_blueprint(blog.blog_blueprint)
     app.register_blueprint(account.main_blueprint)
+    app.register_blueprint(comments_blueprint)
 
     return app
